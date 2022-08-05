@@ -1,0 +1,11 @@
+EnablePlayground: true
+JWTConfig:
+  SecretKey: "xx"
+  OperationKey: "xx"
+
+ListenAddr: 0.0.0.0:8001
+
+TimeOut: 6
+
+LoggerConfig:
+  Level: trace
