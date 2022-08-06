@@ -34,10 +34,10 @@ type Registry struct {
 }
 
 type UserInformation struct {
-	UserID   string  `json:"userID"`
-	Role     Role    `json:"role"`
-	UserName *string `json:"userName"`
-	Email    *string `json:"email"`
+	AccountID   string `json:"accountId"`
+	Role        Role   `json:"role"`
+	Account     string `json:"account"`
+	AccountName string `json:"accountName"`
 }
 
 type Role string

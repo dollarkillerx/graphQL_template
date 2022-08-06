@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dollarkillerx/graphql_template/internal/pkg/enum"
+	"github.com/dollarkillerx/graphql_template/internal/utils"
 	"github.com/rs/xid"
 )
 
@@ -15,16 +16,18 @@ func Context() func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			reqID := xid.New().String()
 			ctx := context.WithValue(r.Context(), enum.RequestId, reqID)
+
 			ctx = context.WithValue(ctx, enum.RequestReceivedAtCtxKey, time.Now())
+
 			// user agent
 			userAgent := r.Header.Get("User-Agent")
 			ctx = context.WithValue(ctx, enum.UserAgentCtxKey, userAgent)
 
-			//// token
-			//tokenString, _ := getTokenFromHeader(r.Header)
-			//if tokenString != "" {
-			//	ctx = context.WithValue(ctx, tokenCtxKey, tokenString)
-			//}
+			// token
+			tokenString, _ := utils.GetTokenFromHeader(r.Header)
+			if tokenString != "" {
+				ctx = context.WithValue(ctx, enum.TokenCtxKey, tokenString)
+			}
 
 			r = r.WithContext(ctx)
 

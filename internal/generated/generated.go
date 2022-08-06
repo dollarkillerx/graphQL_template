@@ -72,10 +72,10 @@ type ComplexityRoot struct {
 	}
 
 	UserInformation struct {
-		Email    func(childComplexity int) int
-		Role     func(childComplexity int) int
-		UserID   func(childComplexity int) int
-		UserName func(childComplexity int) int
+		Account     func(childComplexity int) int
+		AccountID   func(childComplexity int) int
+		AccountName func(childComplexity int) int
+		Role        func(childComplexity int) int
 	}
 }
 
@@ -193,12 +193,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.User(childComplexity), true
 
-	case "UserInformation.email":
-		if e.complexity.UserInformation.Email == nil {
+	case "UserInformation.account":
+		if e.complexity.UserInformation.Account == nil {
 			break
 		}
 
-		return e.complexity.UserInformation.Email(childComplexity), true
+		return e.complexity.UserInformation.Account(childComplexity), true
+
+	case "UserInformation.accountId":
+		if e.complexity.UserInformation.AccountID == nil {
+			break
+		}
+
+		return e.complexity.UserInformation.AccountID(childComplexity), true
+
+	case "UserInformation.accountName":
+		if e.complexity.UserInformation.AccountName == nil {
+			break
+		}
+
+		return e.complexity.UserInformation.AccountName(childComplexity), true
 
 	case "UserInformation.role":
 		if e.complexity.UserInformation.Role == nil {
@@ -206,20 +220,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UserInformation.Role(childComplexity), true
-
-	case "UserInformation.userID":
-		if e.complexity.UserInformation.UserID == nil {
-			break
-		}
-
-		return e.complexity.UserInformation.UserID(childComplexity), true
-
-	case "UserInformation.userName":
-		if e.complexity.UserInformation.UserName == nil {
-			break
-		}
-
-		return e.complexity.UserInformation.UserName(childComplexity), true
 
 	}
 	return 0, false
@@ -354,10 +354,10 @@ type Captcha {
 }
 
 type UserInformation {
-    userID: String!
+    accountId: String!
     role: Role!
-    userName: String
-    email: String
+    account: String!
+    accountName: String!
 }
 
 # user roles
@@ -929,14 +929,14 @@ func (ec *executionContext) fieldContext_Query_user(ctx context.Context, field g
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "userID":
-				return ec.fieldContext_UserInformation_userID(ctx, field)
+			case "accountId":
+				return ec.fieldContext_UserInformation_accountId(ctx, field)
 			case "role":
 				return ec.fieldContext_UserInformation_role(ctx, field)
-			case "userName":
-				return ec.fieldContext_UserInformation_userName(ctx, field)
-			case "email":
-				return ec.fieldContext_UserInformation_email(ctx, field)
+			case "account":
+				return ec.fieldContext_UserInformation_account(ctx, field)
+			case "accountName":
+				return ec.fieldContext_UserInformation_accountName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type UserInformation", field.Name)
 		},
@@ -1120,8 +1120,8 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _UserInformation_userID(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserInformation_userID(ctx, field)
+func (ec *executionContext) _UserInformation_accountId(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserInformation_accountId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1134,7 +1134,7 @@ func (ec *executionContext) _UserInformation_userID(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.UserID, nil
+		return obj.AccountID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1151,7 +1151,7 @@ func (ec *executionContext) _UserInformation_userID(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_UserInformation_userID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserInformation_accountId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserInformation",
 		Field:      field,
@@ -1208,8 +1208,8 @@ func (ec *executionContext) fieldContext_UserInformation_role(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _UserInformation_userName(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserInformation_userName(ctx, field)
+func (ec *executionContext) _UserInformation_account(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserInformation_account(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1222,21 +1222,24 @@ func (ec *executionContext) _UserInformation_userName(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.UserName, nil
+		return obj.Account, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_UserInformation_userName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserInformation_account(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserInformation",
 		Field:      field,
@@ -1249,8 +1252,8 @@ func (ec *executionContext) fieldContext_UserInformation_userName(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _UserInformation_email(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UserInformation_email(ctx, field)
+func (ec *executionContext) _UserInformation_accountName(ctx context.Context, field graphql.CollectedField, obj *UserInformation) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UserInformation_accountName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1263,21 +1266,24 @@ func (ec *executionContext) _UserInformation_email(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Email, nil
+		return obj.AccountName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_UserInformation_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_UserInformation_accountName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "UserInformation",
 		Field:      field,
@@ -3442,9 +3448,9 @@ func (ec *executionContext) _UserInformation(ctx context.Context, sel ast.Select
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UserInformation")
-		case "userID":
+		case "accountId":
 
-			out.Values[i] = ec._UserInformation_userID(ctx, field, obj)
+			out.Values[i] = ec._UserInformation_accountId(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -3456,14 +3462,20 @@ func (ec *executionContext) _UserInformation(ctx context.Context, sel ast.Select
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "userName":
+		case "account":
 
-			out.Values[i] = ec._UserInformation_userName(ctx, field, obj)
+			out.Values[i] = ec._UserInformation_account(ctx, field, obj)
 
-		case "email":
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "accountName":
 
-			out.Values[i] = ec._UserInformation_email(ctx, field, obj)
+			out.Values[i] = ec._UserInformation_accountName(ctx, field, obj)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

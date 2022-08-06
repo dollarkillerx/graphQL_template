@@ -13,6 +13,7 @@ import (
 	"github.com/dollarkillerx/graphql_template/internal/generated"
 	"github.com/dollarkillerx/graphql_template/internal/middlewares"
 	"github.com/dollarkillerx/graphql_template/internal/resolvers"
+	"github.com/dollarkillerx/graphql_template/internal/storage/simple"
 	"github.com/dollarkillerx/graphql_template/internal/utils"
 	"github.com/go-chi/chi/v5"
 )
@@ -64,13 +65,20 @@ func main() {
 	}
 
 	//将所有的rpcClient放入 gqlgen的Resolver
+	newSimple, err := simple.NewSimple(conf.CONFIG.PostgresConfig)
+	if err != nil {
+		log.Fatalln(err)
+	}
 	cf := generated.Config{
-		Resolvers: &resolvers.Resolver{},
+		Resolvers: resolvers.NewResolver(newSimple),
 	}
 
-	cf.Directives.HasLogined = utils.HasLoginFunc
+	cf.Directives.HasLogined = middlewares.HasLoginFunc
 
 	graphQLServer := handler.NewDefaultServer(generated.NewExecutableSchema(cf))
+
+	graphQLServer.SetRecoverFunc(middlewares.RecoverFunc)
+	graphQLServer.SetErrorPresenter(middlewares.MiddleError)
 
 	router.Handle("/graphql", graphQLServer)
 

@@ -1,6 +1,7 @@
 package enum
 
+import "github.com/dollarkillerx/graphql_template/internal/generated"
+
 type AuthJWT struct {
-	Account string `json:"account"`
-	Name    string `json:"name"`
+	generated.UserInformation
 }

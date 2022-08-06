@@ -29,10 +29,10 @@ type Captcha {
 }
 
 type UserInformation {
-    userID: String!
+    accountId: String!
     role: Role!
-    userName: String
-    email: String
+    account: String!
+    accountName: String!
 }
 
 # user roles

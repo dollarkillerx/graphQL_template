@@ -2,22 +2,23 @@ package middlewares
 
 import (
 	"context"
+	"github.com/99designs/gqlgen/graphql"
+	"github.com/dollarkillerx/graphql_template/internal/pkg/enum"
+	"github.com/dollarkillerx/graphql_template/internal/pkg/errs"
+	"github.com/dollarkillerx/graphql_template/internal/utils"
 )
 
-func GetUserIDFromCtx(ctx context.Context) (string, error) {
-	//userID, err := cu.GetUserIDFromContext(ctx)
-	//if err != nil {
-	//	return "", err
-	//}
-	//if userID != nil {
-	//	return *userID, nil
-	//}
-	//
-	//tokenString, _ := GetTokenFromCtx(ctx)
-	//userIDFromToken, err := adam_jwt.GetUserIDFromAccessToken(tokenString, utils.CONFIG.JWTConfig.SecretKey)
-	//if err != nil {
-	//	return "", errors.WithStack(ec.ErrCodeNotLoggedIn.GetError())
-	//}
+func GetUserInformationFromCtx(ctx context.Context) (*enum.AuthJWT, error) {
+	fromContext, err := utils.GetUserInformationFromContext(ctx)
+	return fromContext, err
+}
 
-	return "userIDFromToken", nil
+// HasLoginFunc 如果是请求需要登录才能访问的接口，则需要判断是否带有 token ，并检测 token 的合法性，如果失败拒绝请求
+func HasLoginFunc(ctx context.Context, obj interface{}, next graphql.Resolver) (interface{}, error) {
+	_, err := GetUserInformationFromCtx(ctx)
+	if err != nil {
+		return nil, errs.LoginFailed
+	}
+
+	return next(ctx)
 }

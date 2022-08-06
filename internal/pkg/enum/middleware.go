@@ -9,6 +9,7 @@ func (c ContextKey) String() string {
 // contextKey ...
 const (
 	TokenCtxKey             ContextKey = "Token"
+	AuthorizationCtxKey     ContextKey = "Authorization"
 	UserAgentCtxKey         ContextKey = "UserAgent"
 	RequestId               ContextKey = "requestID"
 	RequestReceivedAtCtxKey ContextKey = "ReqReceivedAt"

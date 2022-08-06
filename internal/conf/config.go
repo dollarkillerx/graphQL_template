@@ -17,6 +17,9 @@ type Configuration struct {
 	TimeOut          int
 	LoggerConfig     cfg.LoggerConfig
 
+	PostgresConfig cfg.PostgresConfiguration
+	Salt           string
+
 	CORSAllowedOrigins []string
 	StaticServerConfig StaticServerConfiguration
 }
