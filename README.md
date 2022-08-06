@@ -57,17 +57,67 @@ Chi + 99designs/gqlgen
 #### example payload
 
 ``` 
+# Welcome to GraphiQL
+#
+# GraphiQL is an in-browser tool for writing, validating, and
+# testing GraphQL queries.
+#
+# Type queries into this side of the screen, and you will see intelligent
+# typeaheads aware of the current GraphQL type schema and live syntax and
+# validation errors highlighted within the text.
+#
+# GraphQL queries typically start with a "{" character. Lines that start
+# with a # are ignored.
+#
+# An example GraphQL query might look like:
+#
+#     {
+#       field(arg: "value") {
+#         subField
+#       }
+#     }
+#
+# Keyboard shortcuts:
+#
+#  Prettify Query:  Shift-Ctrl-P (or press the prettify button above)
+#
+#     Merge Query:  Shift-Ctrl-M (or press the merge button above)
+#
+#       Run Query:  Ctrl-Enter (or press the play button above)
+#
+#   Auto Complete:  Ctrl-Space (or just start typing)
+#
+
 
 query captcha {
   captcha{
-    base64Captcha
+    captchaId
     base64Captcha
   }
 }
 
+query userInfo{
+  user {
+    role
+    account
+    accountId
+    accountName
+  }
+}
+
+mutation registry {
+  registry(input: {
+    name: "dollarkiller",
+    account: "xxx@xxx.com",
+    password:"123456",
+    captchaID: "JA6A2L",
+    captchaCode: "tnka"
+  })
+}
+
 
 mutation login {
-  loginByPassword(input: {account:"sad",password:"asd",captchaID: "sad",captchaCode:"sdgerg"}) {
+  loginByPassword(input: {account:"xxx@xxx.com",password:"123456",captchaID: "0BW0PS",captchaCode:"hk5w"}) {
     userID
     accessTokenString
   }
